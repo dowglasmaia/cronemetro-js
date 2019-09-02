@@ -1,0 +1,71 @@
+
+//03 - Faça funcionar o crônometro. O formato está em horas, minutos, segundos e milisegundos
+
+function left_zero(number) {
+    if (number < 10) {
+        return "0" + number.toString();
+    } else {
+        return number.toString();
+    }
+}
+
+//variaveis
+var iniciado = false, hora_inicio, hora_atual, init_cronometro, tempo_passado, horas, minutos, segundos, milisegundos, resto;
+
+document.getElementById("comecar_parar").onclick = function () {
+
+    if (!iniciado) {
+        iniciado = true; // iniciando cronometro
+        document.getElementById("comecar_parar").innerHTML = "Parar";
+        document.getElementById("comecar_parar").style.background = "red";
+
+        //começar o cronometro -  Verificando se ja começou!
+        if (!hora_inicio) {
+            hora_inicio = new Date().getTime();
+        } else {
+            //pegando hora atual, e descontando o tempo passado
+            hora_inicio = new Date().getTime() - tempo_passado;
+        }
+
+        init_cronometro = window.setInterval(function () {
+            hora_atual = new Date().getTime();
+            tempo_passado = hora_atual - hora_inicio;
+
+            //formatando o relogio do cronometroi!.
+            horas = Math.floor(tempo_passado / 3600000); //hora - arredondando para baixo com Math.floor
+            resto = tempo_passado - (horas * 3600000); // pegando o resto do caculo da hora, convertendo para milisegundos
+
+            minutos = Math.floor(resto / 60000); // segundo
+            resto -= (minutos * 60000);
+
+            segundos = Math.floor(resto / 1000);// segundos
+            resto -= (segundos * 1000);
+
+            milisegundos = resto;
+
+            document.getElementById("cronometro").innerHTML = left_zero(horas) + ":" + left_zero(minutos) + ":" + left_zero(segundos)
+                + "  " + left_zero(milisegundos);
+        }, 10);
+
+    } else {
+        window.clearInterval(init_cronometro); // parando o cronometro
+        iniciado = false;
+        document.getElementById("comecar_parar").innerHTML = "Começar";
+        document.getElementById("comecar_parar").style.background = "#27ae61";
+    }
+
+}
+
+// ZERAR O CRONOMENTRO
+document.getElementById("zerar").onclick = function () {
+    clearInterval(init_cronometro); // para cronometro
+    tempo_passado = 0; // zera
+    iniciado = false;
+    document.getElementById("comecar_parar").innerHTML = "Começar";
+    document.getElementById("comecar_parar").style.background = "#27ae61";
+    
+   // hora_inicio = new Date().getTime();
+    document.getElementById("cronometro").innerHTML = "00:00:00 000";
+
+}
+
